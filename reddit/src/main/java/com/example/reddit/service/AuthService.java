@@ -1,24 +1,30 @@
 package com.example.reddit.service;
 
+import com.example.reddit.dto.AuthenticationResponse;
+import com.example.reddit.dto.LoginRequest;
 import com.example.reddit.dto.RegisterRequest;
 import com.example.reddit.model.NotificationEmail;
 import com.example.reddit.model.User;
 import com.example.reddit.model.VerificationToken;
 import com.example.reddit.repository.UserRepository;
 import com.example.reddit.repository.VerificationTokenRepository;
-import com.example.reddit.util.Constants;
+import com.example.reddit.security.JwtProvider;
 import com.example.reddit.util.CustomException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.example.reddit.util.Constants.ACTIVATION_EMAIL;
-import static java.time.Instant.now;
-
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.example.reddit.util.Constants.ACTIVATION_EMAIL;
+import static java.time.Instant.now;
 
 
 @Service
@@ -31,6 +37,9 @@ public class AuthService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailContentBuilder mailContentBuilder;
     private final MailService mailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
+
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -63,6 +72,14 @@ public class AuthService {
         return passwordEncoder.encode(password);
     }
 
+    @Transactional(readOnly = true)
+    User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new CustomException("User name not found - " + principal.getUsername()));
+    }
+
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationTokenOptional = verificationTokenRepository.findByToken(token);
         verificationTokenOptional.orElseThrow(() -> new CustomException("Invalid Token"));
@@ -77,5 +94,14 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    
+
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String authenticationToken = jwtProvider.generateToken(authenticate);
+        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
+    }
+
+
 }
