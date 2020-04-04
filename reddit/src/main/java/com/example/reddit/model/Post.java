@@ -11,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
 @Entity
@@ -20,7 +19,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long postId;
     @NotBlank(message = "Post Name cannot be empty or Null")
     private String postName;

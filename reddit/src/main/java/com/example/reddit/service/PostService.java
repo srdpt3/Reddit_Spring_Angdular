@@ -32,6 +32,12 @@ public class PostService {
     private final AuthService authService;
     private final PostMapper postMapper;
 
+    public void save(PostRequest postRequest) {
+        Subreddit subreddit = subredditRepository.findByName(postRequest.getSubredditName())
+                .orElseThrow(() -> new CustomException(postRequest.getSubredditName()));
+        postRepository.save(postMapper.map(postRequest, subreddit, authService.getCurrentUser()));
+    }
+
     @Transactional(readOnly = true)
     public PostResponse getPost(Long id) {
         Post post = postRepository.findById(id)
@@ -45,12 +51,6 @@ public class PostService {
                 .stream()
                 .map(postMapper::mapToDto)
                 .collect(toList());
-    }
-
-    public void save(PostRequest postRequest) {
-        Subreddit subreddit = subredditRepository.findByName(postRequest.getSubredditName())
-                .orElseThrow(() -> new CustomException(postRequest.getSubredditName()));
-        postRepository.save(postMapper.map(postRequest, subreddit, authService.getCurrentUser()));
     }
 
     @Transactional(readOnly = true)
