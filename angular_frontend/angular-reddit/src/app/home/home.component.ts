@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostModel } from '../auth/shared/postModel';
 import { PostService } from '../auth/shared/post.service';
-
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,19 +9,14 @@ import { PostService } from '../auth/shared/post.service';
 })
 export class HomeComponent implements OnInit {
 
-  posts$: Array<PostModel> = [];
+  posts$: Observable<PostModel>;
 
   constructor(private postService: PostService) {
 
-    this.postService.getAllPosts().subscribe(post => {
 
-      console.log(post);
-      this.posts$ = post;
-
-
-    })
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.posts$ = await this.postService.getAllPosts();
   }
 }

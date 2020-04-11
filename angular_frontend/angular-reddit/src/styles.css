@@ -2,6 +2,25 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+
+}
+
+
+html {
+  height: 100%;
+  font-size: 72.5%;
+
+}
+
+
+body {
+  margin-top: 63px;
+  height: 100%;
+
+
+
+
 }
 
 input.ng-invalid.ng-touched {
