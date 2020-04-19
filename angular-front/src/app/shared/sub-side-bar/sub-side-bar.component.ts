@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SubredditModel } from 'src/app/models/subreddit-model';
+import { SubredditService } from 'src/app/services/subreddit.service';
 
 @Component({
   selector: 'app-sub-side-bar',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubSideBarComponent implements OnInit {
 
-  constructor() { }
+  subreddits: Array<SubredditModel> = [];
+  displayViewAll: boolean;
 
-  ngOnInit() {
+  constructor(private subredditService: SubredditService) { }
+
+  ngOnInit(): void {
+    this.subredditService.getAllSubreddits().subscribe(data => {
+      if (data.length > 3) {
+        this.subreddits = data.splice(0, 3);
+        this.displayViewAll = true;
+      } else {
+        this.subreddits = data;
+      }
+    });
   }
-
 }
