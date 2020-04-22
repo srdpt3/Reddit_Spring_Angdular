@@ -21,6 +21,7 @@ import { SubSideBarComponent } from './shared/sub-side-bar/sub-side-bar.componen
 import { VoteButtonComponent } from './shared/vote-button/vote-button.component';
 import { CreateSubredditComponent } from './subreddit/create-subreddit/create-subreddit.component';
 import { CreatePostComponent } from './post/create-post/create-post.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { CreatePostComponent } from './post/create-post/create-post.component';
     NgxWebstorageModule.forRoot(),
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    FontAwesomeModule
+    FontAwesomeModule,
+    EditorModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PostModel } from '../models/post-model';
+import { CreatePostPayload } from '../models/create-post-payload';
 
 @Injectable({
   providedIn: 'root'
@@ -13,5 +14,9 @@ export class PostService {
 
   getAllPosts(): Observable<PostModel[]> {
     return this.http.get<PostModel[]>('http://localhost:8080/api/post');
+  }
+
+  createPost(postPayload: CreatePostPayload): Observable<any> {
+    return this.http.post('http://localhost:8080/api/posts/create', postPayload);
   }
 }
