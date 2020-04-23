@@ -22,6 +22,7 @@ import { VoteButtonComponent } from './shared/vote-button/vote-button.component'
 import { CreateSubredditComponent } from './subreddit/create-subreddit/create-subreddit.component';
 import { CreatePostComponent } from './post/create-post/create-post.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { ViewPostComponent } from './post/view-post/view-post.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { EditorModule } from '@tinymce/tinymce-angular';
     SubSideBarComponent,
     VoteButtonComponent,
     CreateSubredditComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    ViewPostComponent
   ],
   imports: [
     BrowserModule,
