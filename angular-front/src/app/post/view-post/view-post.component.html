@@ -15,8 +15,12 @@
               . Posted
               <span> {{ post.duration }} </span>
               by
-
-              <a class="username" href="">{{ post.userName }}</a>
+              <a *ngIf="post.userName === null" class="username" href=""
+                >Anonymous</a
+              >
+              <a *ngIf="post.userName != null" class="username" href="">{{
+                post.userName
+              }}</a>
             </span>
           </span>
           <hr />
@@ -55,7 +59,7 @@
     </div>
     <div class="col-md-3">
       <!-- <sidebar></sidebar>
-        <sidebar-view-subreddit></sidebar-view-subreddit> -->
+      <sidebar-view-subreddit></sidebar-view-subreddit> -->
     </div>
   </div>
 </div>
